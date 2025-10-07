@@ -1,7 +1,10 @@
 package com.tomli.profftask.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,24 +40,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tomli.profftask.Greeting
 import com.tomli.profftask.R
+import com.tomli.profftask.ui.theme.MyColorsTheme
 import com.tomli.profftask.ui.theme.ProffTaskTheme
+import com.tomli.profftask.ui.theme.PurpleApp
 
 @Composable
 fun OnboardingScreen(navController: NavController){
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     var currentPage = remember { mutableStateOf(0) }
-    Column(modifier = Modifier.fillMaxSize().padding(top=up, bottom=down)){
+    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(top=up, bottom=down)){
         when(currentPage.value){
-            0-> OnboardingPage(R.drawable.onboarding0, {currentPage.value++}, currentPage.value)
-            1-> OnboardingPage(R.drawable.onboarding1, {currentPage.value++}, currentPage.value)
-            2-> OnboardingPage(R.drawable.onboarding2, {}, currentPage.value)
+            0-> OnboardingPage(R.drawable.onboarding0, {currentPage.value++}, currentPage.value,{navController.navigate("language_select")})
+            1-> OnboardingPage(R.drawable.onboarding1, {currentPage.value++}, currentPage.value, {navController.navigate("language_select")})
+            2-> OnboardingPage(R.drawable.onboarding2, {navController.navigate("language_select")}, currentPage.value, {navController.navigate("language_select")})
         }
     }
 }
 
 @Composable
-fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int){
+fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit){
     var listColors = remember { mutableListOf(Color.Gray, Color.Gray, Color.Gray) }
     val orange = Color(0xfff86401)
     listColors[pageNum]=orange
@@ -107,16 +113,63 @@ fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int){
         ) {
             Text(text=buttonText, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
         }
-        Text(text="Skip onboarding", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        Text(text="Skip onboarding", modifier = Modifier.fillMaxWidth().clickable { onSkip() }, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
 
 
-@Preview(showBackground = true)
+@Composable
+fun LanguageSelect(navController: NavController){
+    val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val context = LocalContext.current
+    val choiceLanguage= remember { mutableStateOf(0) }
+    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)){
+        Column(modifier = Modifier.background(PurpleApp).fillMaxWidth()){
+            Spacer(modifier = Modifier.height(up))
+            Text(text="Language select", color = Color.White,modifier = Modifier.fillMaxWidth().padding(15.dp), textAlign = TextAlign.Center, fontSize = 20.sp)
+        }
+        Text(text="What is your Mother language?", modifier = Modifier.fillMaxWidth().padding(15.dp), textAlign = TextAlign.Center, fontSize = 20.sp)
+        ButtonLanguage("Russian", choiceLanguage.value, 0, {choiceLanguage.value=0})
+        ButtonLanguage("English", choiceLanguage.value, 1, {choiceLanguage.value=1})
+        ButtonLanguage("Chinese", choiceLanguage.value, 2, {choiceLanguage.value=2})
+        ButtonLanguage("Belarus", choiceLanguage.value, 3, {choiceLanguage.value=3})
+        ButtonLanguage("Kazakh", choiceLanguage.value, 4, {choiceLanguage.value=4})
+        Box(modifier = Modifier.weight(1f)){
+            Button(onClick = {
+                if(choiceLanguage.value==0){
+                    navController.navigate("login")
+                }else{
+                    Toast.makeText(context, "Nope", Toast.LENGTH_LONG).show()
+                }
+                             }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xff5a7bfe)),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(text="Choose", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ButtonLanguage(name: String, chocenButton: Int, thisButton: Int, onChange:()-> Unit){
+    var backColor: Color
+    if(thisButton==chocenButton){
+        backColor=Color(0xfff86401)
+    }else{
+        backColor=Color(0xfffef6eb)
+    }
+    Box(modifier = Modifier.padding(10.dp).background(backColor, shape = RoundedCornerShape(9.dp)).fillMaxWidth().clickable { onChange() }){
+        Text(name, modifier = Modifier.padding(10.dp))
+    }
+}
+
+
+/*@Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ProffTaskTheme {
-        OnboardingPage(R.drawable.onboarding0, {}, 0)
+        //LanguageSelect()
     }
-}
+}*/

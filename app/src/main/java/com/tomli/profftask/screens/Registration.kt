@@ -1,0 +1,119 @@
+package com.tomli.profftask.screens
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.tomli.profftask.R
+import com.tomli.profftask.ui.theme.ProffTaskTheme
+import com.tomli.profftask.ui.theme.PurpleApp
+
+
+@Composable
+fun SignUp(){
+
+}
+
+
+@Composable
+fun LogIn(navController: NavController){
+    val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+        Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
+            Column{
+                Spacer(modifier = Modifier.height(up))
+                Text(
+                    text = "Login",
+                    color = Color.White,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp
+                )
+            }
+            Image(painter = painterResource(R.drawable.back_arrow), contentDescription = null,
+                modifier = Modifier.padding(top=up).size(20.dp).clickable { navController.navigate("language_select") })
+        }
+        Image(painter = painterResource(R.drawable.picture_login), contentDescription = null,
+            modifier = Modifier.size(120.dp).padding(top=10.dp).align(Alignment.CenterHorizontally))
+        Text(
+            text = "For free, join now and start learning",
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp, vertical = 20.dp),
+            textAlign = TextAlign.Center, fontWeight = FontWeight.Bold,
+            fontSize = 22.sp
+        )
+        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp)){
+            Text(text="Email Address")
+            OutlinedTextField(value = email.value, onValueChange = {newText -> email.value = newText},
+                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                shape = RoundedCornerShape(10.dp),
+                placeholder = { Text(text = "Email") })
+            Spacer(modifier = Modifier.height(30.dp))
+            Text(text="Password")
+            OutlinedTextField(value = password.value, onValueChange = {newText -> password.value = newText},
+                modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+                shape = RoundedCornerShape(10.dp),
+                trailingIcon = { Image(painter = painterResource(R.drawable.splash_icon), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp)) },
+                placeholder = { Text(text = "**********") })
+            Text(text="Forgot Password", color = Color(0xffc1235d))
+            Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color(0xff5a7bfe)),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
+            ) {
+                Text(text="Login", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+            }
+            Box(modifier = Modifier.fillMaxWidth()){
+                Row(modifier = Modifier.align(Alignment.Center)){
+                    Text(text="Not you member? ", color = Color(0xff65686f))
+                    Text(text="Signup", color = Color(0xff5a7bfe))
+                }
+            }
+
+        }
+
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    ProffTaskTheme {
+        LogIn(navController = rememberNavController())
+    }
+}

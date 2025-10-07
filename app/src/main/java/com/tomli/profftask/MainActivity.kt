@@ -16,6 +16,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tomli.profftask.screens.LanguageSelect
+import com.tomli.profftask.screens.LogIn
 import com.tomli.profftask.screens.OnboardingScreen
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 
@@ -42,6 +44,13 @@ fun ComposeNavigation() {
         composable("onboarding") {
             OnboardingScreen(navController)
         }
+        composable("language_select") {
+            LanguageSelect(navController)
+        }
+        composable("login") {
+            LogIn(navController)
+        }
+
     }
 }
 
