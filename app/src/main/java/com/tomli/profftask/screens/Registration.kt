@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -32,6 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tomli.profftask.R
+import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
 
@@ -83,14 +88,26 @@ fun LogIn(navController: NavController){
             OutlinedTextField(value = email.value, onValueChange = {newText -> email.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
-                placeholder = { Text(text = "Email") })
+                placeholder = { Text(text = "Email", color=Color(0xffabacb1)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    cursorColor = PurpleApp,
+                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                ))
             Spacer(modifier = Modifier.height(30.dp))
             Text(text="Password")
+            val hidePassword = remember { mutableStateOf(true) }
             OutlinedTextField(value = password.value, onValueChange = {newText -> password.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
-                trailingIcon = { Image(painter = painterResource(R.drawable.splash_icon), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp)) },
-                placeholder = { Text(text = "**********") })
+                trailingIcon = { Image(painter = painterResource(R.drawable.eye_password), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp).clickable { hidePassword.value=!hidePassword.value }) },
+                placeholder = { Text(text = "**********", color=Color(0xffabacb1)) },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    cursorColor = PurpleApp,
+                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
+                    VisualTransformation.None})
             Text(text="Forgot Password", color = Color(0xffc1235d))
             Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color(0xff5a7bfe)),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
