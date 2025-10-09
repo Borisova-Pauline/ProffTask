@@ -38,9 +38,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.tomli.profftask.Greeting
 import com.tomli.profftask.R
+import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.MyColorsTheme
+import com.tomli.profftask.ui.theme.OrangeApp
+import com.tomli.profftask.ui.theme.PaleOrangeApp
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
 
@@ -61,8 +65,7 @@ fun OnboardingScreen(navController: NavController){
 @Composable
 fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit){
     var listColors = remember { mutableListOf(Color.Gray, Color.Gray, Color.Gray) }
-    val orange = Color(0xfff86401)
-    listColors[pageNum]=orange
+    listColors[pageNum]=OrangeApp
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)){
         Box(modifier = Modifier.weight(1f).fillMaxWidth()){
             Image(painter = painterResource(picId), contentDescription = null,
@@ -108,7 +111,7 @@ fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->U
             Text(text=phrase1, fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
             Text(text=phrase2, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = Color(0xff7e8188))
         }
-        Button(onClick = ButtonClick, colors = ButtonDefaults.buttonColors(containerColor = Color(0xff5a7bfe)),
+        Button(onClick = ButtonClick, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
             modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), shape = RoundedCornerShape(15.dp)
         ) {
             Text(text=buttonText, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
@@ -143,8 +146,8 @@ fun LanguageSelect(navController: NavController){
                 }else{
                     Toast.makeText(context, "Nope", Toast.LENGTH_LONG).show()
                 }
-                             }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xff5a7bfe)),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), shape = RoundedCornerShape(15.dp)
+                             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp).align(Alignment.BottomCenter).padding(horizontal = 10.dp, vertical = 7.dp), shape = RoundedCornerShape(15.dp)
             ) {
                 Text(text="Choose", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
             }
@@ -156,20 +159,11 @@ fun LanguageSelect(navController: NavController){
 fun ButtonLanguage(name: String, chocenButton: Int, thisButton: Int, onChange:()-> Unit){
     var backColor: Color
     if(thisButton==chocenButton){
-        backColor=Color(0xfff86401)
+        backColor=OrangeApp
     }else{
-        backColor=Color(0xfffef6eb)
+        backColor=PaleOrangeApp
     }
-    Box(modifier = Modifier.padding(10.dp).background(backColor, shape = RoundedCornerShape(9.dp)).fillMaxWidth().clickable { onChange() }){
-        Text(name, modifier = Modifier.padding(10.dp))
+    Box(modifier = Modifier.padding(10.dp).background(backColor, shape = RoundedCornerShape(15.dp)).fillMaxWidth().clickable { onChange() }){
+        Text(name, modifier = Modifier.padding(15.dp), fontSize = 20.sp)
     }
 }
-
-
-/*@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProffTaskTheme {
-        //LanguageSelect()
-    }
-}*/

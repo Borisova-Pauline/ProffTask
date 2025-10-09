@@ -19,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import com.tomli.profftask.screens.LanguageSelect
 import com.tomli.profftask.screens.LogIn
 import com.tomli.profftask.screens.OnboardingScreen
+import com.tomli.profftask.screens.SignUpAccount
+import com.tomli.profftask.screens.SignUpPassword
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,6 +51,12 @@ fun ComposeNavigation() {
         }
         composable("login") {
             LogIn(navController)
+        }
+        composable("signup_account") {
+            SignUpAccount(navController)
+        }
+        composable("signup_password") {
+            SignUpPassword(navController)
         }
 
     }
