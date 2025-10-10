@@ -37,10 +37,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tomli.profftask.Greeting
 import com.tomli.profftask.R
+import com.tomli.profftask.databases.ProffViewModel
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.MyColorsTheme
 import com.tomli.profftask.ui.theme.OrangeApp
@@ -63,7 +65,7 @@ fun OnboardingScreen(navController: NavController){
 }
 
 @Composable
-fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit){
+fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     var listColors = remember { mutableListOf(Color.Gray, Color.Gray, Color.Gray) }
     listColors[pageNum]=OrangeApp
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)){
