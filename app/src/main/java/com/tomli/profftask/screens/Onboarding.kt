@@ -1,5 +1,6 @@
 package com.tomli.profftask.screens
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -16,13 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -34,20 +32,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.tomli.profftask.Greeting
 import com.tomli.profftask.R
-import com.tomli.profftask.databases.ProffViewModel
 import com.tomli.profftask.ui.theme.BlueButtonColor
-import com.tomli.profftask.ui.theme.MyColorsTheme
 import com.tomli.profftask.ui.theme.OrangeApp
 import com.tomli.profftask.ui.theme.PaleOrangeApp
-import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
 
 @Composable
@@ -55,17 +46,29 @@ fun OnboardingScreen(navController: NavController){
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     var currentPage = remember { mutableStateOf(0) }
+    val context = LocalContext.current
+    val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    var isUserInSystem = sharedPrefs.getBoolean("login", false)
+    //var currentUserId = sharedPrefs.getInt("userId", -1)
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(top=up, bottom=down)){
         when(currentPage.value){
-            0-> OnboardingPage(R.drawable.onboarding0, {currentPage.value++}, currentPage.value,{navController.navigate("language_select")})
-            1-> OnboardingPage(R.drawable.onboarding1, {currentPage.value++}, currentPage.value, {navController.navigate("language_select")})
-            2-> OnboardingPage(R.drawable.onboarding2, {navController.navigate("language_select")}, currentPage.value, {navController.navigate("language_select")})
+            0-> OnboardingPage(R.drawable.onboarding0, {currentPage.value++}, currentPage.value,{ if(!isUserInSystem){
+                navController.navigate("language_select");
+            }else{ navController.navigate("main_page") } })
+            1-> OnboardingPage(R.drawable.onboarding1, {currentPage.value++}, currentPage.value, {if(!isUserInSystem){
+                navController.navigate("language_select");
+            }else{ navController.navigate("main_page") } })
+            2-> OnboardingPage(R.drawable.onboarding2, {if(!isUserInSystem){
+                navController.navigate("language_select");
+            }else{ navController.navigate("main_page") }
+            }, currentPage.value, {if(!isUserInSystem){ navController.navigate("language_select");
+            }else{ navController.navigate("main_page") } })
         }
     }
 }
 
 @Composable
-fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
+fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit){
     var listColors = remember { mutableListOf(Color.Gray, Color.Gray, Color.Gray) }
     listColors[pageNum]=OrangeApp
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)){
@@ -130,6 +133,8 @@ fun LanguageSelect(navController: NavController){
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val context = LocalContext.current
     val choiceLanguage= remember { mutableStateOf(0) }
+    val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    val editor = sharedPrefs.edit()
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)){
         Column(modifier = Modifier.background(PurpleApp).fillMaxWidth()){
             Spacer(modifier = Modifier.height(up))
@@ -144,6 +149,7 @@ fun LanguageSelect(navController: NavController){
         Box(modifier = Modifier.weight(1f)){
             Button(onClick = {
                 if(choiceLanguage.value==0){
+                    editor.putString("languageCurrent", Languages.entries.get(choiceLanguage.value).name).apply()
                     navController.navigate("login")
                 }else{
                     Toast.makeText(context, "Nope", Toast.LENGTH_LONG).show()
@@ -168,4 +174,9 @@ fun ButtonLanguage(name: String, chocenButton: Int, thisButton: Int, onChange:()
     Box(modifier = Modifier.padding(10.dp).background(backColor, shape = RoundedCornerShape(15.dp)).fillMaxWidth().clickable { onChange() }){
         Text(name, modifier = Modifier.padding(15.dp), fontSize = 20.sp)
     }
+}
+
+
+enum class Languages{
+    Russian, English, Chinese, Belarus, Kazakh
 }

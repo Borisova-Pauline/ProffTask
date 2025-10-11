@@ -1,5 +1,8 @@
 package com.tomli.profftask.screens
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,9 +45,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tomli.profftask.R
+import com.tomli.profftask.databases.ProffViewModel
+import com.tomli.profftask.databases.UserData
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.ProffTaskTheme
@@ -58,6 +64,7 @@ fun SignUpAccount(navController: NavController){
     val email = remember { mutableStateOf("") }
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
+    val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column {
@@ -110,7 +117,12 @@ fun SignUpAccount(navController: NavController){
                     unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
                 ))
 
-            Button(onClick = {navController.navigate("signup_password")}, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
+            Button(onClick = {if(firstName.value!="" && lastName.value!="" && email.value!=""){
+                navController.navigate("signup_password/${firstName.value}/${lastName.value}/${email.value}")
+            }else{
+                Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
+            }
+                }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
                 Text(text="Continue", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
@@ -128,12 +140,15 @@ fun SignUpAccount(navController: NavController){
 
 
 @Composable
-fun SignUpPassword(navController: NavController){
+fun SignUpPassword(navController: NavController,name: String, lastName: String, email: String, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
     val okayRules = remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    val language = sharedPrefs.getString("languageCurrent", Languages.Russian.name)
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column {
@@ -169,7 +184,7 @@ fun SignUpPassword(navController: NavController){
             Spacer(modifier = Modifier.height(30.dp))
             Text(text="Confirm Password")
             val hidePasswordConfirm = remember { mutableStateOf(true) }
-            OutlinedTextField(value = password.value, onValueChange = {newText -> confirmPassword.value = newText},
+            OutlinedTextField(value = confirmPassword.value, onValueChange = {newText -> confirmPassword.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
                 trailingIcon = { Image(painter = painterResource(R.drawable.eye_password), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp).clickable { hidePasswordConfirm.value=!hidePasswordConfirm.value }) },
@@ -188,7 +203,17 @@ fun SignUpPassword(navController: NavController){
                 Text(text="I have made myself acquainted with the Rules and accept all its provisions,", modifier = Modifier.align(Alignment.CenterVertically))
             }
 
-            Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
+            Button(onClick = {if(password.value!="" && confirmPassword.value!="" &&password.value==confirmPassword.value&&okayRules.value==true){
+                proffViewModel.addNewUser(email, name, lastName, password.value, language!!, context)
+                navController.navigate("main_page")
+            }else if(password.value==confirmPassword.value){
+                Toast.makeText(context, "Подтверждение пароля не совпадает с паролем", Toast.LENGTH_LONG).show()
+            }else if(okayRules.value==false){
+                Toast.makeText(context, "Нет соглашения с правилами", Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
+            }
+            }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
                 Text(text="Signup", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
@@ -206,11 +231,12 @@ fun SignUpPassword(navController: NavController){
 
 
 @Composable
-fun LogIn(navController: NavController){
+fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column{
@@ -260,7 +286,26 @@ fun LogIn(navController: NavController){
                 ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
             Text(text="Forgot Password", color = Color(0xffc1235d))
-            Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
+            Button(onClick = {
+                if(email.value!=""&&password.value!=""){
+                    var userThis = UserData(0, "", "","","","", 0,0)
+                    var isHaveNot = mutableStateOf(false)
+                    proffViewModel.getUserOnLogin(email.value, password.value, {user, notHave ->  userThis=user; isHaveNot.value=notHave})
+                    Log.v("error", "after user serching $isHaveNot")
+                    if(!isHaveNot.value){
+                        Toast.makeText(context, "Ошибка в почте или пароле", Toast.LENGTH_LONG).show()
+                    }else{
+                        val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                        val editor = sharedPrefs.edit()
+                        editor.putBoolean("login", true)
+                        editor.putInt("userId", userThis.id!!)
+                        editor.apply()
+                        navController.navigate("main_page")
+                    }
+                }else{
+                    Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
+                }
+            }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
                 Text(text="Login", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
@@ -283,6 +328,6 @@ fun LogIn(navController: NavController){
 @Composable
 fun GreetingPreview() {
     ProffTaskTheme {
-        SignUpPassword(navController = rememberNavController())
+        //SignUpPassword(navController = rememberNavController())
     }
 }
