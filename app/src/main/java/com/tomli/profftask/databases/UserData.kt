@@ -12,5 +12,6 @@ data class UserData(
     val password: String?,
     val language: String?,
     val guess_animal_count: Int?,
-    val right_choice_count: Int?
+    val right_choice_count: Int?,
+    val image_uri: String?
 )

@@ -17,4 +17,10 @@ interface Dao {
 
     @Query("select * from user_data where id=:id")
     suspend fun getUser(id: Int): UserData?
+
+    @Query("select * from user_data order by (guess_animal_count+right_choice_count) limit 3")
+    fun getThreeBestCount(): Flow<List<UserData>>
+
+    @Query("update user_data set right_choice_count=:count where id=:id")
+    suspend fun setNewRightChoiceCount(id: Int, count: Int)
 }

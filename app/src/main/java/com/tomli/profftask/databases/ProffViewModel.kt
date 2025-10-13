@@ -13,14 +13,16 @@ import com.tomli.profftask.Applic
 import kotlinx.coroutines.launch
 
 class ProffViewModel(val database: ProffDB)  : ViewModel() {
+    val threeBestUsers = database.dao.getThreeBestCount()
+    val defaultUser = UserData(0, "", "","","","", 0,0, null)
 
     fun addNewUser(email: String,name: String, last_name: String, password: String, language: String, context: Context)=viewModelScope.launch {
         database.dao.addUser(email,name, last_name, password, language)
-        val user = database.dao.getUserOnLogin(email, password) ?: UserData(0, "", "","","","", 0,0)
+        val user = database.dao.getUserOnLogin(email, password) ?: defaultUser
         val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val editor = sharedPrefs.edit()
         editor.putBoolean("login", true)
-        editor.putInt("userId", user?.id!!)
+        editor.putInt("userId", user.id!!)
         editor.apply()
     }
 
@@ -29,14 +31,25 @@ class ProffViewModel(val database: ProffDB)  : ViewModel() {
             val user = database.dao.getUserOnLogin(email, password)
             onReturn(user!!, false)
         }else{
-            onReturn(UserData(0, "", "","","","", 0,0),
+            onReturn(defaultUser,
                 true)
         }
     }
 
     fun getUser(id: Int, onReturn: (user: UserData) -> Unit)=viewModelScope.launch {
-        var user = mutableStateOf(database.dao.getUser(id) ?: UserData(0, "", "","","","", 0,0))
-        onReturn(user.value!!)
+        var user = mutableStateOf(database.dao.getUser(id) ?: defaultUser)
+        onReturn(user.value)
+    }
+
+    fun setNewRightChoiceCount(id: Int, count: Int)=viewModelScope.launch {
+        if(count==0){
+            database.dao.setNewRightChoiceCount(id, count)
+        }else{
+            val user = database.dao.getUser(id) ?: defaultUser
+            database.dao.setNewRightChoiceCount(id, user.right_choice_count!!+1)
+        }
+
+
     }
 
 

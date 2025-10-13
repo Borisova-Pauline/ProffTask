@@ -135,6 +135,7 @@ fun LanguageSelect(navController: NavController){
     val choiceLanguage= remember { mutableStateOf(0) }
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     val editor = sharedPrefs.edit()
+    var isUserInSystem = sharedPrefs.getBoolean("login", false)
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)){
         Column(modifier = Modifier.background(PurpleApp).fillMaxWidth()){
             Spacer(modifier = Modifier.height(up))
@@ -150,7 +151,11 @@ fun LanguageSelect(navController: NavController){
             Button(onClick = {
                 if(choiceLanguage.value==0){
                     editor.putString("languageCurrent", Languages.entries.get(choiceLanguage.value).name).apply()
-                    navController.navigate("login")
+                    if(isUserInSystem){
+                        navController.navigate("profile_screen")
+                    }else{
+                        navController.navigate("login")
+                    }
                 }else{
                     Toast.makeText(context, "Nope", Toast.LENGTH_LONG).show()
                 }

@@ -18,10 +18,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tomli.profftask.screens.ChooseRightScreen
 import com.tomli.profftask.screens.LanguageSelect
 import com.tomli.profftask.screens.LogIn
 import com.tomli.profftask.screens.MainPage
 import com.tomli.profftask.screens.OnboardingScreen
+import com.tomli.profftask.screens.ProfileScreen
 import com.tomli.profftask.screens.SignUpAccount
 import com.tomli.profftask.screens.SignUpPassword
 import com.tomli.profftask.ui.theme.ProffTaskTheme
@@ -70,7 +72,12 @@ fun ComposeNavigation() {
         composable("main_page") {
             MainPage(navController)
         }
-
+        composable("profile_screen") {
+            ProfileScreen(navController)
+        }
+        composable("choose_word_screen") {
+            ChooseRightScreen(navController)
+        }
     }
 }
 

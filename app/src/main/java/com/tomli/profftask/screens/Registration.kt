@@ -55,6 +55,7 @@ import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
+import com.tomli.profftask.ui.theme.RedPinkColor
 
 
 @Composable
@@ -285,10 +286,10 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
                     unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
                 ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
-            Text(text="Forgot Password", color = Color(0xffc1235d))
+            Text(text="Forgot Password", color = RedPinkColor)
             Button(onClick = {
                 if(email.value!=""&&password.value!=""){
-                    var userThis = UserData(0, "", "","","","", 0,0)
+                    var userThis = UserData(0, "", "","","","", 0,0, null)
                     var isHaveNot = mutableStateOf(false)
                     proffViewModel.getUserOnLogin(email.value, password.value, {user, notHave ->  userThis=user; isHaveNot.value=notHave})
                     Log.v("error", "after user serching $isHaveNot")
@@ -324,10 +325,3 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProffTaskTheme {
-        //SignUpPassword(navController = rememberNavController())
-    }
-}
