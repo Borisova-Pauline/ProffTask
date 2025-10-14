@@ -1,6 +1,7 @@
 package com.tomli.profftask.screens
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -59,7 +60,7 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
     val context = LocalContext.current
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     var currentUserId = sharedPrefs.getInt("userId", -2)
-    var user = remember { mutableStateOf(UserData(0, "", "","","","", 0,0,null))}
+    var user = remember { mutableStateOf(UserData(0, "", "","","","", 0,0, null))}
     var userList = proffViewModel.threeBestUsers.collectAsState(initial = emptyList())
     //var user = remember { mutableStateOf(UserData(0, "Polina@gmail", "Polina","Bor","1234","Russian", 1,2,null))}
     //var userList= listOf(user.value, user.value, user.value)
@@ -70,7 +71,8 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
         Column(modifier = Modifier.background(PurpleApp).padding(top = up, start=25.dp, end =25.dp).fillMaxWidth()
             .clickable { navController.navigate("profile_screen") }) {
             Spacer(modifier = Modifier.height(7.dp))
-            AsyncImage(model = user.value.image_uri ?: R.mipmap.example_icon_user, contentDescription = null,
+            val b: Bitmap? = byteArrayToBitmap(user.value.image_uri)
+            AsyncImage(model = b ?: R.mipmap.example_icon_user, contentDescription = null,
                 modifier = Modifier.size(70.dp).clip(CircleShape))
             Text(text = "Hello, ${user.value.name}", color=Color.White, fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 7.dp))
@@ -84,7 +86,8 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
                 items(userList.value){ item ->
                     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = Color(0xffe5e5e5), shape = RoundedCornerShape(20.dp))){
                         Box(modifier = Modifier.padding(10.dp)){
-                            AsyncImage(model = item.image_uri ?: R.mipmap.example_icon_user, contentDescription = null,
+                            val a: Bitmap? = byteArrayToBitmap(item.image_uri)
+                            AsyncImage(model = a ?: R.mipmap.example_icon_user, contentDescription = null,
                                 modifier = Modifier.size(50.dp).clip(CircleShape))
                         }
                         Text(text = "${item.name}", fontSize=18.sp, modifier = Modifier.weight(1f).align(Alignment.CenterVertically).padding(5.dp),

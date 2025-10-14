@@ -1,7 +1,16 @@
 package com.tomli.profftask.screens
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -44,7 +53,9 @@ import com.tomli.profftask.databases.UserData
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
+import java.io.ByteArrayOutputStream
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val context = LocalContext.current
@@ -55,11 +66,19 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
     proffViewModel.getUser(currentUserId, {usr -> user.value=usr})
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    var imageUri = remember { mutableStateOf<Uri?>(null) }
+    val pickMediaLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri: Uri? ->
+        imageUri.value = uri
+    }
     Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
         Column(modifier = Modifier.background(PurpleApp).padding(top = up, start=25.dp, end =25.dp).fillMaxWidth()
             .clickable { navController.navigate("main_page") }) {
             Spacer(modifier = Modifier.height(7.dp))
-            AsyncImage(model = user.value.image_uri ?: R.mipmap.example_icon_user, contentDescription = null,
+            val b: Bitmap? = byteArrayToBitmap(user.value.image_uri)
+            AsyncImage(model = /*user.value.image_uri*/ b ?: R.mipmap.example_icon_user, contentDescription = null,
                 modifier = Modifier.size(120.dp).clip(CircleShape))
             Text(text = "Your profile, ${user.value.name}", color=Color.White, fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 9.dp))
@@ -79,7 +98,13 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
             ) {
                 Text(text="Change mother language", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
             }
+
             Button(onClick = {
+                pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                /*val bitmapNew = uriToBitmap(imageUri.value!!, context)
+                val byteArray = bitmapToByteArray(bitmapNew!!)
+                user.value.image_uri=byteArray
+                proffViewModel.updateIcon(user.value)*/
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
@@ -97,3 +122,30 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
 }
 
 
+fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
+    val outputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+    return outputStream.toByteArray()
+}
+
+
+fun byteArrayToBitmap(byteArray: ByteArray?): Bitmap? {
+    return if(byteArray==null){
+        null
+    }else{
+        BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+
+}
+
+
+@RequiresApi(Build.VERSION_CODES.P)
+fun uriToBitmap(uri: Uri?, context: Context): Bitmap? {
+    return try {
+        val source = ImageDecoder.createSource(context.contentResolver, uri!!)
+        ImageDecoder.decodeBitmap(source)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}

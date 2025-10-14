@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomli.profftask.Applic
 import kotlinx.coroutines.launch
 
@@ -48,8 +49,10 @@ class ProffViewModel(val database: ProffDB)  : ViewModel() {
             val user = database.dao.getUser(id) ?: defaultUser
             database.dao.setNewRightChoiceCount(id, user.right_choice_count!!+1)
         }
+    }
 
-
+    fun updateIcon(user: UserData)= viewModelScope.launch {
+        database.dao.changeIcon(user)
     }
 
 

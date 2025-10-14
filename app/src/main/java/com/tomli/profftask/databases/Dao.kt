@@ -2,6 +2,7 @@ package com.tomli.profftask.databases
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,4 +24,7 @@ interface Dao {
 
     @Query("update user_data set right_choice_count=:count where id=:id")
     suspend fun setNewRightChoiceCount(id: Int, count: Int)
+
+    @Update
+    suspend fun changeIcon(user: UserData)
 }
