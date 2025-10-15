@@ -46,6 +46,10 @@ android {
 }
 
 dependencies {
+    implementation("io.github.rroohit:ImageCropView:3.1.1")
+    implementation("com.github.moyuruaizawa:cropify:0.5.1")
+    implementation("com.vanniktech:android-image-cropper:4.6.0")
+
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
 
     val room_version = "2.7.2"

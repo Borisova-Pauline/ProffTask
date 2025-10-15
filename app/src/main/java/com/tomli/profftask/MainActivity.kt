@@ -1,20 +1,25 @@
 package com.tomli.profftask
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,11 +31,16 @@ import com.tomli.profftask.screens.LogIn
 import com.tomli.profftask.screens.MainPage
 import com.tomli.profftask.screens.OnboardingScreen
 import com.tomli.profftask.screens.ProfileScreen
+import com.tomli.profftask.screens.ResizeImage
 import com.tomli.profftask.screens.SignUpAccount
 import com.tomli.profftask.screens.SignUpPassword
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 
+
 class MainActivity : ComponentActivity() {
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var pendingIntent: PendingIntent
+
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -41,6 +51,42 @@ class MainActivity : ComponentActivity() {
                 ComposeNavigation()
             }
         }
+
+        /*if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val name = "Channel"
+            val description = "desc"
+            val imp = NotificationManager.IMPORTANCE_LOW
+            val mchannel = NotificationChannel("channel", name, imp)
+            mchannel.description=description
+            val notificationManag = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManag.createNotificationChannel(mchannel)
+        }
+        var builder = NotificationCompat.Builder(this, "channel").setSmallIcon(R.mipmap.icon)
+            .setContentTitle("This is a notification").setContentText("Hello").setPriority(NotificationCompat.PRIORITY_LOW)
+        with(NotificationManagerCompat.from(this)){
+            if(ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.POST_NOTIFICATIONS)!= PackageManager.PERMISSION_GRANTED){
+                return@with
+            }//Manifest.permission.POST_NOTIFICATIONS
+            notify(2, builder.build())
+        }*/
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val triggerIntent = Intent(this, AlarmReceiver::class.java)
+        pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            triggerIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val triggerTime = System.currentTimeMillis() + 60000
+        alarmManager.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerTime,
+            pendingIntent)
     }
 }
 
@@ -81,6 +127,10 @@ fun ComposeNavigation() {
         }
         composable("choose_word_screen") {
             ChooseRightScreen(navController)
+        }
+        composable("resize_image_screen/{image}", arguments = listOf(navArgument("image"){type = NavType.StringType})) {
+                navBackStack ->  val image: String = navBackStack.arguments?.getString("image") ?: "none"
+            ResizeImage(navController, image)
         }
     }
 }

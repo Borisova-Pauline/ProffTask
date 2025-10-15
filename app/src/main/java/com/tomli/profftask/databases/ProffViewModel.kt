@@ -1,9 +1,11 @@
 package com.tomli.profftask.databases
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -51,8 +53,8 @@ class ProffViewModel(val database: ProffDB)  : ViewModel() {
         }
     }
 
-    fun updateIcon(user: UserData)= viewModelScope.launch {
-        database.dao.changeIcon(user)
+    fun updateIcon(id: Int, image: ByteArray)= viewModelScope.launch {
+        database.dao.changeIcon(id, image)
     }
 
 

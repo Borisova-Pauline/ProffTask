@@ -25,6 +25,6 @@ interface Dao {
     @Query("update user_data set right_choice_count=:count where id=:id")
     suspend fun setNewRightChoiceCount(id: Int, count: Int)
 
-    @Update
-    suspend fun changeIcon(user: UserData)
+    @Query("update user_data set image_uri=:image where id=:id")
+    suspend fun changeIcon(id: Int, image: ByteArray)
 }

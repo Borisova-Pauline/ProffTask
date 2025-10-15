@@ -1,7 +1,11 @@
 package com.tomli.profftask.screens
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -49,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getSystemService
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.GreenRight

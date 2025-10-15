@@ -172,10 +172,3 @@ enum class Words(val engWordTranscription: String, val rusWord: String){
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProffTaskTheme {
-        ChooseRightScreen(navController = rememberNavController())
-    }
-}
