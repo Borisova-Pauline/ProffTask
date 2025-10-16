@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -26,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tomli.profftask.screens.ChooseRightScreen
+import com.tomli.profftask.screens.GuessAnimal
 import com.tomli.profftask.screens.LanguageSelect
 import com.tomli.profftask.screens.LogIn
 import com.tomli.profftask.screens.MainPage
@@ -52,23 +54,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        /*if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
-            val name = "Channel"
-            val description = "desc"
-            val imp = NotificationManager.IMPORTANCE_LOW
-            val mchannel = NotificationChannel("channel", name, imp)
-            mchannel.description=description
-            val notificationManag = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManag.createNotificationChannel(mchannel)
-        }
-        var builder = NotificationCompat.Builder(this, "channel").setSmallIcon(R.mipmap.icon)
-            .setContentTitle("This is a notification").setContentText("Hello").setPriority(NotificationCompat.PRIORITY_LOW)
-        with(NotificationManagerCompat.from(this)){
-            if(ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.POST_NOTIFICATIONS)!= PackageManager.PERMISSION_GRANTED){
-                return@with
-            }//Manifest.permission.POST_NOTIFICATIONS
-            notify(2, builder.build())
-        }*/
+
     }
 
     override fun onStop() {
@@ -82,7 +68,7 @@ class MainActivity : ComponentActivity() {
             triggerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val triggerTime = System.currentTimeMillis() + 60000
+        val triggerTime = System.currentTimeMillis() + 10000
         alarmManager.setAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             triggerTime,
@@ -94,9 +80,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ComposeNavigation() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    var isUserInSystem = sharedPrefs.getBoolean("login", false)
     NavHost(
         navController = navController,
-        startDestination = "onboarding"
+        startDestination = if(!isUserInSystem){"onboarding"}else{"main_page"}
     ) {
         composable("onboarding") {
             OnboardingScreen(navController)
@@ -128,9 +117,11 @@ fun ComposeNavigation() {
         composable("choose_word_screen") {
             ChooseRightScreen(navController)
         }
-        composable("resize_image_screen/{image}", arguments = listOf(navArgument("image"){type = NavType.StringType})) {
-                navBackStack ->  val image: String = navBackStack.arguments?.getString("image") ?: "none"
-            ResizeImage(navController, image)
+        composable("guess_animal_screen") {
+            GuessAnimal(navController)
+        }
+        composable("resize_image_screen") {
+            ResizeImage(navController)
         }
     }
 }

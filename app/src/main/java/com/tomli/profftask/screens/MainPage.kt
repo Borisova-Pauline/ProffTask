@@ -104,7 +104,7 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
             Text(text = "Available excersises", color=Color.Black, fontSize = 20.sp,
                 modifier = Modifier.padding(vertical = 7.dp))
             Row{
-                Column(modifier = Modifier.weight(1f).background(color = BlueButtonColor, shape = RoundedCornerShape(20.dp))){
+                Column(modifier = Modifier.weight(1f).background(color = BlueButtonColor, shape = RoundedCornerShape(20.dp)).clickable { navController.navigate("guess_animal_screen") }){
                     Text(text = "\uD83D\uDC3B\u200D❄\uFE0F", fontSize = 70.sp, modifier = Modifier.fillMaxWidth().padding(top=8.dp), textAlign = TextAlign.Center)
                     Text(text = "Guess the animal", modifier = Modifier.fillMaxWidth().padding(bottom =8.dp), textAlign = TextAlign.Center, color = Color.White)
                 }

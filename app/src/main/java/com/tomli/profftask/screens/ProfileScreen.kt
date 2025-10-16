@@ -156,7 +156,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
                     val fileOut = FileOutputStream(tempFile)
                     bitmapNew!!.compress(Bitmap.CompressFormat.PNG, 100, fileOut)
                     fileOut.close()
-                    navController.navigate("resize_image_screen/changingImage")
+                    navController.navigate("resize_image_screen")
                     imageUri.value=null
                 }
             }
@@ -183,7 +183,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
 }
 
 @Composable
-fun ResizeImage(navController: NavController, image: String, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
+fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val context = LocalContext.current
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     var currentUserId = sharedPrefs.getInt("userId", -2)
@@ -230,19 +230,6 @@ fun ResizeImage(navController: NavController, image: String, proffViewModel: Pro
     }
 }
 
-
-
-
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProffTaskTheme {
-        //ResizeImage(navController = rememberNavController())
-    }
-}
 
 
 fun bitmapToByteArray(bitmap: Bitmap): ByteArray {

@@ -53,6 +53,15 @@ class ProffViewModel(val database: ProffDB)  : ViewModel() {
         }
     }
 
+    fun setNewGuessAnimalCount(id: Int, count: Int)=viewModelScope.launch {
+        if(count==0){
+            database.dao.setNewGuessAnimalCount(id, count)
+        }else{
+            val user = database.dao.getUser(id) ?: defaultUser
+            database.dao.setNewGuessAnimalCount(id, user.guess_animal_count!!+1)
+        }
+    }
+
     fun updateIcon(id: Int, image: ByteArray)= viewModelScope.launch {
         database.dao.changeIcon(id, image)
     }
