@@ -46,6 +46,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation("androidx.glance:glance-material3:1.1.0")
+
     implementation("io.github.rroohit:ImageCropView:3.1.1")
     implementation("com.github.moyuruaizawa:cropify:0.5.1")
     implementation("com.vanniktech:android-image-cropper:4.6.0")

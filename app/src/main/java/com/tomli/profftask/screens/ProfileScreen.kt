@@ -134,7 +134,6 @@ fun ProfileScreen(navController: NavController, onThemeChange:()-> Unit, proffVi
                 }
             }
             Button(onClick = {
-                //Toast.makeText(context, "Uh Oh", Toast.LENGTH_LONG).show()
                 onThemeChange()
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier
