@@ -141,7 +141,13 @@ fun ProfileScreen(navController: NavController, onThemeChange:()-> Unit, proffVi
                     .fillMaxWidth()
                     .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Switch to Dark", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
+                var text: String
+                if(sharedPrefs.getBoolean("isDarkTheme", false)){
+                    text = "Switch to Light"
+                }else{
+                    text = "Switch to Dark"
+                }
+                Text(text=text, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Button(onClick = { navController.navigate("language_select")
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
