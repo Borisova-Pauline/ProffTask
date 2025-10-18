@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -50,7 +51,7 @@ fun OnboardingScreen(navController: NavController){
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     var isUserInSystem = sharedPrefs.getBoolean("login", false)
     //var currentUserId = sharedPrefs.getInt("userId", -1)
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(top=up, bottom=down)){
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(top=up, bottom=down)){
         when(currentPage.value){
             0-> OnboardingPage(R.drawable.onboarding0, {currentPage.value++}, currentPage.value,{ if(!isUserInSystem){
                 navController.navigate("language_select");
@@ -69,7 +70,8 @@ fun OnboardingScreen(navController: NavController){
 
 @Composable
 fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->Unit){
-    var listColors = remember { mutableListOf(Color.Gray, Color.Gray, Color.Gray) }
+    val gray = MaterialTheme.colorScheme.surfaceVariant
+    var listColors = remember { mutableListOf(gray, gray, gray) }
     listColors[pageNum]=OrangeApp
     Column(modifier = Modifier.fillMaxSize().padding(20.dp)){
         Box(modifier = Modifier.weight(1f).fillMaxWidth()){
@@ -113,15 +115,15 @@ fun OnboardingPage(picId: Int, ButtonClick:()-> Unit, pageNum: Int, onSkip:()->U
             }
         }
         Column(modifier = Modifier.fillMaxWidth().padding(20.dp)){
-            Text(text=phrase1, fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            Text(text=phrase1, fontSize = 22.sp, fontWeight = FontWeight.Bold, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
             Text(text=phrase2, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = Color(0xff7e8188))
         }
         Button(onClick = ButtonClick, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
             modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp), shape = RoundedCornerShape(15.dp)
         ) {
-            Text(text=buttonText, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+            Text(text=buttonText, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
         }
-        Text(text="Skip onboarding", modifier = Modifier.fillMaxWidth().clickable { onSkip() }, textAlign = TextAlign.Center)
+        Text(text="Skip onboarding", modifier = Modifier.fillMaxWidth().clickable { onSkip() }, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
         Spacer(modifier = Modifier.height(40.dp))
     }
 }
@@ -136,12 +138,12 @@ fun LanguageSelect(navController: NavController){
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     val editor = sharedPrefs.edit()
     var isUserInSystem = sharedPrefs.getBoolean("login", false)
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)){
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)){
         Column(modifier = Modifier.background(PurpleApp).fillMaxWidth()){
             Spacer(modifier = Modifier.height(up))
             Text(text="Language select", color = Color.White,modifier = Modifier.fillMaxWidth().padding(15.dp), textAlign = TextAlign.Center, fontSize = 20.sp)
         }
-        Text(text="What is your Mother language?", modifier = Modifier.fillMaxWidth().padding(15.dp), textAlign = TextAlign.Center, fontSize = 20.sp)
+        Text(text="What is your Mother language?", modifier = Modifier.fillMaxWidth().padding(15.dp), textAlign = TextAlign.Center, fontSize = 20.sp, color = MaterialTheme.colorScheme.onBackground)
         ButtonLanguage("Russian", choiceLanguage.value, 0, {choiceLanguage.value=0})
         ButtonLanguage("English", choiceLanguage.value, 1, {choiceLanguage.value=1})
         ButtonLanguage("Chinese", choiceLanguage.value, 2, {choiceLanguage.value=2})
@@ -162,7 +164,7 @@ fun LanguageSelect(navController: NavController){
                              }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp).align(Alignment.BottomCenter).padding(horizontal = 10.dp, vertical = 7.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Choose", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Choose", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
         }
     }

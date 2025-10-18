@@ -51,6 +51,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -90,7 +91,7 @@ import java.io.FileOutputStream
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
+fun ProfileScreen(navController: NavController, onThemeChange:()-> Unit, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val context = LocalContext.current
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     var currentUserId = sharedPrefs.getInt("userId", -2)
@@ -108,7 +109,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
     }
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color.White)
+        .background(MaterialTheme.colorScheme.background)
         .padding(bottom = down)) {
         Column(modifier = Modifier
             .background(PurpleApp)
@@ -133,13 +134,14 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
                 }
             }
             Button(onClick = {
-                Toast.makeText(context, "Uh Oh", Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, "Uh Oh", Toast.LENGTH_LONG).show()
+                onThemeChange()
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Switch to Dark", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Switch to Dark", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Button(onClick = { navController.navigate("language_select")
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
@@ -147,7 +149,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
                     .fillMaxWidth()
                     .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Change mother language", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Change mother language", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             if(imageUri.value!=null){
                 LaunchedEffect(Unit) {
@@ -167,7 +169,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
                     .fillMaxWidth()
                     .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Change your image", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Change your image", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Button(onClick = {
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
@@ -175,7 +177,7 @@ fun ProfileScreen(navController: NavController, proffViewModel: ProffViewModel =
                     .fillMaxWidth()
                     .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Logout", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Logout", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Spacer(modifier = Modifier.height(25.dp))
         }
@@ -194,7 +196,7 @@ fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = v
     var image=BitmapFactory.decodeFile(filePath)
     File(filePath).deleteOnExit()
 
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp).clickable { navController.navigate("profile_screen") }) {
             Column{
                 Spacer(modifier = Modifier.height(up))

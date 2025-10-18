@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +64,7 @@ fun ChooseRightScreen(navController: NavController, proffViewModel: ProffViewMod
     val word = remember { mutableStateOf(numsList.value[Random.nextInt(0, 3)])}
     val chosenVar = remember { mutableStateOf(-1) }
     var checkAnswer = remember { mutableStateOf(false) }
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column{
                 Spacer(modifier = Modifier.height(up))
@@ -80,33 +81,40 @@ fun ChooseRightScreen(navController: NavController, proffViewModel: ProffViewMod
         }
         Column(modifier = Modifier.padding(horizontal = 25.dp)){
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = Words.entries.get(word.value).name, modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp), textAlign = TextAlign.Center, fontSize = 22.sp)
-            Text(text = Words.entries.get(word.value).engWordTranscription, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            Text(text = Words.entries.get(word.value).name, modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp), textAlign = TextAlign.Center, fontSize = 22.sp, color = MaterialTheme.colorScheme.onBackground)
+            Text(text = Words.entries.get(word.value).engWordTranscription, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
             Spacer(modifier = Modifier.height(20.dp))
             LazyColumn {
                 items(numsList.value){ item ->
                     if(!checkAnswer.value){
                         var color: Color
+                        var wordColor: Color
                         if(item==chosenVar.value){
                             color = BlueButtonColor
+                            wordColor = Color.White
                         }else{
                             color = Color(0xffe5e5e5)
+                            wordColor = Color.Black
                         }
                         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = color, shape = RoundedCornerShape(15.dp))
                             .clickable { chosenVar.value=item }){
-                            Text(text = Words.entries.get(item).rusWord, modifier = Modifier.fillMaxWidth().padding(10.dp), textAlign = TextAlign.Center, fontSize = 18.sp)
+                            Text(text = Words.entries.get(item).rusWord, modifier = Modifier.fillMaxWidth().padding(10.dp), textAlign = TextAlign.Center, fontSize = 18.sp, color=wordColor)
                         }
                     }else{
                         var color: Color
+                        var wordColor: Color
                         if(item==word.value){
                             color = GreenRight
+                            wordColor = Color.White
                         }else if(item!=word.value && item==chosenVar.value){
                             color= RedPinkColor
+                            wordColor = Color.White
                         }else{
                             color = Color(0xffe5e5e5)
+                            wordColor = Color.Black
                         }
                         Box(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = color, shape = RoundedCornerShape(15.dp))){
-                            Text(text = Words.entries.get(item).rusWord, modifier = Modifier.fillMaxWidth().padding(10.dp), textAlign = TextAlign.Center, fontSize = 18.sp)
+                            Text(text = Words.entries.get(item).rusWord, modifier = Modifier.fillMaxWidth().padding(10.dp), textAlign = TextAlign.Center, fontSize = 18.sp, color = wordColor)
                         }
                     }
 
@@ -121,7 +129,7 @@ fun ChooseRightScreen(navController: NavController, proffViewModel: ProffViewMod
                 }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                     modifier = Modifier.fillMaxWidth().padding(vertical = 25.dp), shape = RoundedCornerShape(15.dp)
                 ) {
-                    Text(text="Check", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                    Text(text="Check", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                 }
             }else{
                 Button(onClick = {
@@ -137,7 +145,7 @@ fun ChooseRightScreen(navController: NavController, proffViewModel: ProffViewMod
                 }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                     modifier = Modifier.fillMaxWidth().padding(vertical = 25.dp), shape = RoundedCornerShape(15.dp)
                 ) {
-                    Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                    Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                 }
             }
         }

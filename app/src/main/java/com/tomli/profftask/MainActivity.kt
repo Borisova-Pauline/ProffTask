@@ -13,8 +13,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
@@ -49,8 +52,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ProffTaskTheme {
-                ComposeNavigation()
+            val context = LocalContext.current
+            val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+            var darkTheme = remember { mutableStateOf(sharedPrefs.getBoolean("isDarkTheme", false))}
+            ProffTaskTheme(darkTheme = if(sharedPrefs.getBoolean("changeThemeAgreed", false)){darkTheme.value}else{ isSystemInDarkTheme()}) {
+                ComposeNavigation({darkTheme.value=!darkTheme.value
+                    sharedPrefs.edit().putBoolean("changeThemeAgreed", true).apply()
+                    if(sharedPrefs.getBoolean("isDarkTheme", false)){
+                        sharedPrefs.edit().putBoolean("isDarkTheme", false).apply()
+                    }else{
+                        sharedPrefs.edit().putBoolean("isDarkTheme", true).apply()
+                    }})
             }
         }
 
@@ -78,7 +90,7 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun ComposeNavigation() {
+fun ComposeNavigation(onThemeChange:()->Unit) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
@@ -112,7 +124,7 @@ fun ComposeNavigation() {
             MainPage(navController)
         }
         composable("profile_screen") {
-            ProfileScreen(navController)
+            ProfileScreen(navController, onThemeChange=onThemeChange)
         }
         composable("choose_word_screen") {
             ChooseRightScreen(navController)

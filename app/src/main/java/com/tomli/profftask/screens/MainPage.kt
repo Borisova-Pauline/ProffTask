@@ -47,6 +47,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -72,7 +73,7 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
     proffViewModel.getUser(currentUserId, {usr -> user.value=usr})
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Column(modifier = Modifier.background(PurpleApp).padding(top = up, start=25.dp, end =25.dp).fillMaxWidth()
             .clickable { navController.navigate("profile_screen") }) {
             Spacer(modifier = Modifier.height(7.dp))
@@ -85,23 +86,23 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
                 modifier = Modifier.padding(vertical = 7.dp))
         }
         Column(modifier = Modifier.padding(horizontal = 25.dp)){
-            Text(text = "Top users", color=Color.Black, fontSize = 20.sp,
+            Text(text = "Top users", color = MaterialTheme.colorScheme.onBackground, fontSize = 20.sp,
                 modifier = Modifier.padding(vertical = 7.dp))
             LazyColumn{
                 items(userList.value){ item ->
-                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = Color(0xffe5e5e5), shape = RoundedCornerShape(20.dp))){
+                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(20.dp))){
                         Box(modifier = Modifier.padding(10.dp)){
                             val a: Bitmap? = byteArrayToBitmap(item.image_uri)
                             AsyncImage(model = a ?: R.mipmap.example_icon_user, contentDescription = null,
                                 modifier = Modifier.size(50.dp).clip(CircleShape))
                         }
                         Text(text = "${item.name}", fontSize=18.sp, modifier = Modifier.weight(1f).align(Alignment.CenterVertically).padding(5.dp),
-                            maxLines = 2, overflow = TextOverflow.Ellipsis)
-                        Text(text = "${(item.guess_animal_count!!+item.right_choice_count!!)} points", fontSize=18.sp, modifier = Modifier.padding(15.dp).align(Alignment.CenterVertically))
+                            maxLines = 2, overflow = TextOverflow.Ellipsis, color = MaterialTheme.colorScheme.onBackground)
+                        Text(text = "${(item.guess_animal_count!!+item.right_choice_count!!)} points", fontSize=18.sp, modifier = Modifier.padding(15.dp).align(Alignment.CenterVertically), color = MaterialTheme.colorScheme.onBackground)
                     }
                 }
             }
-            Text(text = "Available excersises", color=Color.Black, fontSize = 20.sp,
+            Text(text = "Available excersises", color = MaterialTheme.colorScheme.onBackground, fontSize = 20.sp,
                 modifier = Modifier.padding(vertical = 7.dp))
             Row{
                 Column(modifier = Modifier.weight(1f).background(color = BlueButtonColor, shape = RoundedCornerShape(20.dp)).clickable { navController.navigate("guess_animal_screen") }){

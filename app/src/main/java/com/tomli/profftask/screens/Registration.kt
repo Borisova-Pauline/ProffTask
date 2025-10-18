@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -66,7 +67,7 @@ fun SignUpAccount(navController: NavController){
     val firstName = remember { mutableStateOf("") }
     val lastName = remember { mutableStateOf("") }
     val context = LocalContext.current
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column {
                 Spacer(modifier = Modifier.height(up))
@@ -83,39 +84,39 @@ fun SignUpAccount(navController: NavController){
                     .clickable { navController.navigate("language_select") })
         }
         Text(text="Create an Account", fontSize = 24.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp),
-            textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp)){
-            Text(text="First Name")
+            Text(text="First Name", color = MaterialTheme.colorScheme.onBackground)
             OutlinedTextField(value = firstName.value, onValueChange = {newText -> firstName.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
                 placeholder = { Text(text = "Your First Name", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ))
             Spacer(modifier = Modifier.height(30.dp))
-            Text(text="Last Name")
+            Text(text="Last Name", color = MaterialTheme.colorScheme.onBackground)
             OutlinedTextField(value = lastName.value, onValueChange = {newText -> lastName.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
                 placeholder = { Text(text = "Your Last Name", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ))
             Spacer(modifier = Modifier.height(30.dp))
-            Text(text="Email Address")
+            Text(text="Email Address", color = MaterialTheme.colorScheme.onBackground)
             OutlinedTextField(value = email.value, onValueChange = {newText -> email.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
                 placeholder = { Text(text = "Email", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ))
 
             Button(onClick = {if(firstName.value!="" && lastName.value!="" && email.value!=""){
@@ -126,7 +127,7 @@ fun SignUpAccount(navController: NavController){
                 }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Continue", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Continue", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Box(modifier = Modifier.fillMaxWidth()){
                 Row(modifier = Modifier.align(Alignment.Center)){
@@ -150,7 +151,7 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
     val context = LocalContext.current
     val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
     val language = sharedPrefs.getString("languageCurrent", Languages.Russian.name)
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column {
                 Spacer(modifier = Modifier.height(up))
@@ -167,9 +168,9 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
                     .clickable { navController.navigateUp() })
         }
         Text(text="Choose a Password", fontSize = 24.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp),
-            textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp)){
-            Text(text="Password")
+            Text(text="Password", color = MaterialTheme.colorScheme.onBackground)
             val hidePassword = remember { mutableStateOf(true) }
             OutlinedTextField(value = password.value, onValueChange = {newText -> password.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
@@ -177,13 +178,13 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
                 trailingIcon = { Image(painter = painterResource(R.drawable.eye_password), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp).clickable { hidePassword.value=!hidePassword.value }) },
                 placeholder = { Text(text = "**********", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
             Spacer(modifier = Modifier.height(30.dp))
-            Text(text="Confirm Password")
+            Text(text="Confirm Password", color = MaterialTheme.colorScheme.onBackground)
             val hidePasswordConfirm = remember { mutableStateOf(true) }
             OutlinedTextField(value = confirmPassword.value, onValueChange = {newText -> confirmPassword.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
@@ -191,9 +192,9 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
                 trailingIcon = { Image(painter = painterResource(R.drawable.eye_password), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp).clickable { hidePasswordConfirm.value=!hidePasswordConfirm.value }) },
                 placeholder = { Text(text = "**********", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ), visualTransformation = if(hidePasswordConfirm.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
 
@@ -201,7 +202,7 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
                 Checkbox(checked = okayRules.value, onCheckedChange = {
                     okayRules.value=!okayRules.value
                 }, colors = CheckboxDefaults.colors(checkedColor = BlueButtonColor, uncheckedColor = BlueButtonColor))
-                Text(text="I have made myself acquainted with the Rules and accept all its provisions,", modifier = Modifier.align(Alignment.CenterVertically))
+                Text(text="I have made myself acquainted with the Rules and accept all its provisions,", modifier = Modifier.align(Alignment.CenterVertically), color = MaterialTheme.colorScheme.onBackground)
             }
 
             Button(onClick = {if(password.value!="" && confirmPassword.value!="" &&password.value==confirmPassword.value&&okayRules.value==true){
@@ -217,7 +218,7 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Signup", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Signup", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Box(modifier = Modifier.fillMaxWidth()){
                 Row(modifier = Modifier.align(Alignment.Center)){
@@ -238,7 +239,7 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val context = LocalContext.current
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp)) {
             Column{
                 Spacer(modifier = Modifier.height(up))
@@ -259,21 +260,21 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
             text = "For free, join now and start learning",
             modifier = Modifier.fillMaxWidth().padding(horizontal = 40.dp, vertical = 20.dp),
             textAlign = TextAlign.Center, fontWeight = FontWeight.Bold,
-            fontSize = 22.sp
+            fontSize = 22.sp, color = MaterialTheme.colorScheme.onBackground
         )
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 25.dp)){
-            Text(text="Email Address")
+            Text(text="Email Address", color = MaterialTheme.colorScheme.onBackground)
             OutlinedTextField(value = email.value, onValueChange = {newText -> email.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                 shape = RoundedCornerShape(10.dp),
                 placeholder = { Text(text = "Email", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ))
             Spacer(modifier = Modifier.height(30.dp))
-            Text(text="Password")
+            Text(text="Password", color = MaterialTheme.colorScheme.onBackground)
             val hidePassword = remember { mutableStateOf(true) }
             OutlinedTextField(value = password.value, onValueChange = {newText -> password.value = newText},
                 modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
@@ -281,9 +282,9 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
                 trailingIcon = { Image(painter = painterResource(R.drawable.eye_password), contentDescription = null, modifier = Modifier.padding(15.dp).size(20.dp).clickable { hidePassword.value=!hidePassword.value }) },
                 placeholder = { Text(text = "**********", color=Color(0xffabacb1)) },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                    focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PurpleApp,
-                    unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                 ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
             Text(text="Forgot Password", color = RedPinkColor)
@@ -309,7 +310,7 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 30.dp), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text="Login", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                Text(text="Login", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Box(modifier = Modifier.fillMaxWidth()){
                 Row(modifier = Modifier.align(Alignment.Center)){

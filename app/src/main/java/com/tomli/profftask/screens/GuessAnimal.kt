@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -61,11 +62,11 @@ fun GuessAnimal(navController: NavController, proffViewModel: ProffViewModel = v
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     val animalWrite = remember { mutableStateOf("") }
-    val animal = remember{mutableStateOf(Random.nextInt(0, (enumValues<Words>().last().ordinal + 1)))}
+    val animal = remember{mutableStateOf(Random.nextInt(0, (enumValues<AnimalsGuess>().last().ordinal + 1)))}
     val colorUp = remember { mutableStateOf(PurpleApp) }
     val screenExercise = remember { mutableStateOf(ScreenStates.Exercise) }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color.White).padding(bottom = down)) {
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Box(modifier = Modifier.background(colorUp.value).fillMaxWidth().padding(15.dp)) {
             Column{
                 Spacer(modifier = Modifier.height(up))
@@ -89,14 +90,14 @@ fun GuessAnimal(navController: NavController, proffViewModel: ProffViewModel = v
 
 
                     Spacer(modifier = Modifier.height(20.dp))
-                    Text(text="Write who is on image")
+                    Text(text="Write who is on image", color = MaterialTheme.colorScheme.onBackground)
                     OutlinedTextField(value = animalWrite.value, onValueChange = {newText -> animalWrite.value = newText},
                         modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
                         shape = RoundedCornerShape(20.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = PurpleApp, unfocusedBorderColor = FieldBackColorLight,
+                            focusedBorderColor = PurpleApp, unfocusedBorderColor = MaterialTheme.colorScheme.surface,
                             cursorColor = PurpleApp,
-                            unfocusedContainerColor = FieldBackColorLight, focusedContainerColor = FieldBackColorLight
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface, focusedContainerColor = MaterialTheme.colorScheme.surface
                         ))
                     Button(onClick = {
                         if(AnimalsGuess.entries.get(animal.value).nameAnimal == animalWrite.value.trim().toLowerCase(Locale.ROOT)){
@@ -111,39 +112,39 @@ fun GuessAnimal(navController: NavController, proffViewModel: ProffViewModel = v
                     }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                         modifier = Modifier.fillMaxWidth().padding(vertical = 14.dp), shape = RoundedCornerShape(15.dp)
                     ) {
-                        Text(text="Check", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                        Text(text="Check", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                     }
                 }
             }
             ScreenStates.RightAnswer -> {
                 Column(modifier = Modifier.padding(15.dp)){
                     Text(text="\uD83C\uDF89", fontSize = 180.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(15.dp))
-                    Text(text="Holy Molly! That is Right!", fontSize = 22.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                    Text(text="Holy Molly! That is Right!", fontSize = 22.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onBackground)
                     Button(onClick = {
                         colorUp.value = PurpleApp
-                        animal.value = Random.nextInt(0, (enumValues<Words>().last().ordinal + 1))
+                        animal.value = Random.nextInt(0, (enumValues<AnimalsGuess>().last().ordinal + 1))
                         animalWrite.value = ""
                         screenExercise.value = ScreenStates.Exercise
                     }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                         modifier = Modifier.fillMaxWidth().padding(vertical = 35.dp), shape = RoundedCornerShape(15.dp)
                     ) {
-                        Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                        Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                     }
                 }
             }
             ScreenStates.WrongAnswer -> {
                 Column(modifier = Modifier.padding(15.dp)){
                     Text(text="\uD83D\uDE3F", fontSize = 180.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(15.dp))
-                    Text(text="Eh? Wrong answer :(\nThat is: ${AnimalsGuess.entries.get(animal.value).name}", fontSize = 22.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                    Text(text="Eh? Wrong answer :(\nThat is: ${AnimalsGuess.entries.get(animal.value).name}", fontSize = 22.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onBackground)
                     Button(onClick = {
                         colorUp.value = PurpleApp
-                        animal.value = Random.nextInt(0, (enumValues<Words>().last().ordinal + 1))
+                        animal.value = Random.nextInt(0, (enumValues<AnimalsGuess>().last().ordinal + 1))
                         animalWrite.value = ""
                         screenExercise.value = ScreenStates.Exercise
                     }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                         modifier = Modifier.fillMaxWidth().padding(vertical = 35.dp), shape = RoundedCornerShape(15.dp)
                     ) {
-                        Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                        Text(text="Next", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                     }
                     Button(onClick = {
                         colorUp.value = PurpleApp
@@ -152,7 +153,7 @@ fun GuessAnimal(navController: NavController, proffViewModel: ProffViewModel = v
                     }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                         modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(15.dp)
                     ) {
-                        Text(text="Try again", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp))
+                        Text(text="Try again", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
                     }
                 }
             }
