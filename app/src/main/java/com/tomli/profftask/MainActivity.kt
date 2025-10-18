@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tomli.profftask.screens.ChooseRightScreen
+import com.tomli.profftask.screens.GameScreen
 import com.tomli.profftask.screens.GuessAnimal
 import com.tomli.profftask.screens.LanguageSelect
 import com.tomli.profftask.screens.LogIn
@@ -134,6 +135,9 @@ fun ComposeNavigation(onThemeChange:()->Unit) {
         }
         composable("resize_image_screen") {
             ResizeImage(navController)
+        }
+        composable("game_screen") {
+            GameScreen(navController)
         }
     }
 }

@@ -61,7 +61,7 @@ fun ChooseRightScreen(navController: NavController, proffViewModel: ProffViewMod
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     val numsList = remember { mutableStateOf(generateFourNums()) }
-    val word = remember { mutableStateOf(numsList.value[Random.nextInt(0, 3)])}
+    val word = remember { mutableStateOf(numsList.value[Random.nextInt(0, 4)])}
     val chosenVar = remember { mutableStateOf(-1) }
     var checkAnswer = remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {

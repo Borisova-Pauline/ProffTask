@@ -122,7 +122,7 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
                     Text(text = "Audition", modifier = Modifier.fillMaxWidth().padding(bottom =8.dp), textAlign = TextAlign.Center, color = Color.White)
                 }
                 Spacer(modifier = Modifier.width(20.dp))
-                Column(modifier = Modifier.weight(1f).background(color = GreenRight, shape = RoundedCornerShape(20.dp))){
+                Column(modifier = Modifier.weight(1f).background(color = GreenRight, shape = RoundedCornerShape(20.dp)).clickable { navController.navigate("game_screen") }){
                     Text(text = "\uD83C\uDFAE", fontSize = 70.sp, modifier = Modifier.fillMaxWidth().padding(top=8.dp), textAlign = TextAlign.Center)
                     Text(text = "Game", modifier = Modifier.fillMaxWidth().padding(bottom=8.dp), textAlign = TextAlign.Center, color = Color.White)
                 }
