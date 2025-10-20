@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -38,11 +39,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withAnnotation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -120,7 +129,11 @@ fun SignUpAccount(navController: NavController){
                 ))
 
             Button(onClick = {if(firstName.value!="" && lastName.value!="" && email.value!=""){
-                navController.navigate("signup_password/${firstName.value}/${lastName.value}/${email.value}")
+                if(isThisOnEmail(email.value)){
+                    navController.navigate("signup_password/${firstName.value}/${lastName.value}/${email.value}")
+                }else{
+                    Toast.makeText(context, "Такого email не может существовать", Toast.LENGTH_LONG).show()
+                }
             }else{
                 Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
             }
@@ -202,15 +215,20 @@ fun SignUpPassword(navController: NavController,name: String, lastName: String, 
                 Checkbox(checked = okayRules.value, onCheckedChange = {
                     okayRules.value=!okayRules.value
                 }, colors = CheckboxDefaults.colors(checkedColor = BlueButtonColor, uncheckedColor = BlueButtonColor))
-                Text(text="I have made myself acquainted with the Rules and accept all its provisions,", modifier = Modifier.align(Alignment.CenterVertically), color = MaterialTheme.colorScheme.onBackground)
+                HyperlinkText(modifier = Modifier.align(Alignment.CenterVertically))
             }
 
             Button(onClick = {if(password.value!="" && confirmPassword.value!="" &&password.value==confirmPassword.value&&okayRules.value==true){
-                proffViewModel.addNewUser(email, name, lastName, password.value, language!!, context)
-                navController.navigate("main_page")
+                if(isThisOnRegexPassword(password.value)){
+                    proffViewModel.addNewUser(email, name, lastName, password.value, language!!, context)
+                    navController.navigate("main_page")
+                }else{
+                    Toast.makeText(context, "Требования: 8+ симв., большие и маленькие буквы, цифры", Toast.LENGTH_LONG).show()
+                }
+
             }else if(password.value==confirmPassword.value){
                 Toast.makeText(context, "Подтверждение пароля не совпадает с паролем", Toast.LENGTH_LONG).show()
-            }else if(okayRules.value==false){
+            }else if(!okayRules.value){
                 Toast.makeText(context, "Нет соглашения с правилами", Toast.LENGTH_LONG).show()
             }else{
                 Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
@@ -326,3 +344,42 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
 }
 
 
+fun isThisOnRegexPassword(word: String): Boolean{
+    return (word.matches(Regex(".{8,}")))&&(word.matches(Regex(".*[a-z]+.*")))&&(word.matches(Regex(".*[A-Z]+.*")))&&(word.matches(Regex(".*[0-9]+.*")))
+}
+
+fun isThisOnEmail(word: String): Boolean{
+    return (word.matches(Regex("[a-z0-9]+@[a-z]+\\.[a-z]+")))
+}
+
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun HyperlinkText(modifier: Modifier) {
+    val uriHandler = LocalUriHandler.current
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+            append("I have made myself acquainted with ")
+        }
+        withAnnotation(tag = "URL", annotation = "https://docs.google.com/document/d/19Ga1AuPf-98id6X4Ixw2tWLZenzSNBz9s6ZnSEMTv7g/edit?usp=drivesdk") {
+            withStyle(style = SpanStyle(color = BlueButtonColor)){
+                append("the Rules")
+            }
+        }
+        withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+            append(" and accept all its provisions,")
+        }
+    }
+    ClickableText(
+        text = annotatedString,
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(
+                tag = "URL",
+                start = offset,
+                end = offset
+            ).firstOrNull()?.let { annotation ->
+                uriHandler.openUri(annotation.item)
+            }
+        }, modifier = modifier
+    )
+}

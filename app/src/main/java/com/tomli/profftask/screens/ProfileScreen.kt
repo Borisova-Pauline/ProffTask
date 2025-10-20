@@ -212,6 +212,7 @@ fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = v
                 )
             }
         }
+        
         val width = remember { mutableStateOf(image.width) }
         val height = remember { mutableStateOf(image.height)}
         val showCrop = remember { mutableStateOf(false) }
