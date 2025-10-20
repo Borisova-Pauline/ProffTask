@@ -1,12 +1,15 @@
 package com.tomli.profftask.screens
 
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.background
@@ -54,13 +57,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
+import com.tomli.profftask.checkAndRequestPermission
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.GreenRight
 import com.tomli.profftask.ui.theme.OrangeApp
 import com.tomli.profftask.ui.theme.RedPinkColor
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MainPage(navController: NavController, proffViewModel: ProffViewModel = viewModel(factory = ProffViewModel.factory)){
     val context = LocalContext.current
@@ -73,6 +79,8 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
     proffViewModel.getUser(currentUserId, {usr -> user.value=usr})
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    checkAndRequestPermission(context)
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
         Column(modifier = Modifier.background(PurpleApp).padding(top = up, start=25.dp, end =25.dp).fillMaxWidth()
             .clickable { navController.navigate("profile_screen") }) {
@@ -117,7 +125,7 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
             }
             Spacer(modifier = Modifier.height(20.dp))
             Row{
-                Column(modifier = Modifier.weight(1f).background(color = OrangeApp, shape = RoundedCornerShape(20.dp))){
+                Column(modifier = Modifier.weight(1f).background(color = OrangeApp, shape = RoundedCornerShape(20.dp)).clickable { navController.navigate("audio_screen") }){
                     Text(text = "\uD83D\uDD0A", fontSize = 70.sp, modifier = Modifier.fillMaxWidth().padding(top=8.dp), textAlign = TextAlign.Center)
                     Text(text = "Audition", modifier = Modifier.fillMaxWidth().padding(bottom =8.dp), textAlign = TextAlign.Center, color = Color.White)
                 }

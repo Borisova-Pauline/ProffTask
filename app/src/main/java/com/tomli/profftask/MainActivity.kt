@@ -1,5 +1,7 @@
 package com.tomli.profftask
 
+import android.Manifest
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -23,12 +25,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tomli.profftask.screens.AudioScreen
 import com.tomli.profftask.screens.ChooseRightScreen
 import com.tomli.profftask.screens.GameScreen
 import com.tomli.profftask.screens.GuessAnimal
@@ -66,8 +70,6 @@ class MainActivity : ComponentActivity() {
                     }})
             }
         }
-
-
     }
 
     override fun onStop() {
@@ -86,6 +88,41 @@ class MainActivity : ComponentActivity() {
             AlarmManager.RTC_WAKEUP,
             triggerTime,
             pendingIntent)
+    }
+
+
+    /*@Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)} passing\n      in a {@link RequestMultiplePermissions} object for the {@link ActivityResultContract} and\n      handling the result in the {@link ActivityResultCallback#onActivityResult(Object) callback}.")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            NOTIFICATION_PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Разрешение получено
+                    // Здесь ваш код для работы с камерой
+                } else {
+                    // Пользователь отказал в разрешении
+                    // Можно показать объяснение, почему это разрешение необходимо
+                }
+                return
+            }
+        }
+    }*/
+}
+
+private val NOTIFICATION_PERMISSION_CODE = 100
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+fun checkAndRequestPermission(context: Context) {
+    if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
+        != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(
+            context as Activity,
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            NOTIFICATION_PERMISSION_CODE
+        )
     }
 }
 
@@ -138,6 +175,9 @@ fun ComposeNavigation(onThemeChange:()->Unit) {
         }
         composable("game_screen") {
             GameScreen(navController)
+        }
+        composable("audio_screen") {
+            AudioScreen(navController)
         }
     }
 }

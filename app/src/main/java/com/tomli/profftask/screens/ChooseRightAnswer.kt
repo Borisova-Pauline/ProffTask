@@ -175,7 +175,8 @@ enum class Words(val engWordTranscription: String, val rusWord: String){
     Gardener("[ˈɡɑːdnə]", "Cадовник"),
     Fly("[flaɪ]", "Муха"),
     Dog("[dɒɡ]","Собака"),
-    Gladiolus("[ˌɡlædɪˈəʊləs]", "Гладиолус")
+    Gladiolus("[ˌɡlædɪˈəʊləs]", "Гладиолус"),
+    Cucumber("[ˈkjuːkʌmbə]", "Огурец")
 }
 
 
