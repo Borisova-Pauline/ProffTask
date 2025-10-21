@@ -30,4 +30,28 @@ interface Dao {
 
     @Query("update user_data set image_uri=:image where id=:id")
     suspend fun changeIcon(id: Int, image: ByteArray)
+
+    @Query("WITH sums_table AS (" +
+            "    SELECT *, (right_choice_count + guess_animal_count) as total_sum" +
+            "    FROM user_data), known_row AS (" +
+            "    SELECT * FROM sums_table WHERE id = :id), next_row AS (" +
+            "    SELECT * FROM sums_table" +
+            "    WHERE total_sum = (" +
+            "        SELECT MAX(total_sum) " +
+            "        FROM sums_table " +
+            "        WHERE total_sum < (SELECT total_sum FROM known_row) " +
+            "    )), upper_rows AS ( " +
+            "    SELECT * " +
+            "    FROM sums_table " +
+            "    WHERE total_sum > (SELECT total_sum FROM next_row) " +
+            "    ORDER BY total_sum ASC " +
+            "    LIMIT 2), all_rows AS ( " +
+            "    SELECT * FROM known_row " +
+            "    UNION " +
+            "    SELECT * FROM next_row " +
+            "    UNION " +
+            "    SELECT * FROM upper_rows) " +
+            "SELECT * FROM all_rows " +
+            "ORDER BY total_sum DESC;")
+    suspend fun getForWidget(id: Int): List<UserData>
 }

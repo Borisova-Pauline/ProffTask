@@ -218,6 +218,7 @@ fun GameScreen(navController: NavController){
                         if(chosenVar.value>-1){
                             checkAnswer.value=true
                             timeOfThisRound.value=0
+                            //currentRound.value++
                         }
                     }
                 }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),

@@ -4,31 +4,27 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.util.Log
 import android.widget.RemoteViews
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.datastore.preferences.core.longPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.compose.ui.graphics.Color
 import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.tomli.profftask.ui.theme.MyFont
+import androidx.glance.background
+import androidx.glance.layout.Column
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
+import com.tomli.profftask.ui.theme.PurpleApp
 
 
 class MyWidget: GlanceAppWidget(errorUiLayout = R.layout.widget_error) {
+
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val prefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+
         provideContent {
             CompositionLocalProvider() {
                 Content()
@@ -36,12 +32,11 @@ class MyWidget: GlanceAppWidget(errorUiLayout = R.layout.widget_error) {
         }
     }
 
-    //override var stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
-
     @Composable
     fun Content() {
-        //Text(text="Hello", style = TextStyle(fontFamily = MyFont))
-        Image(painter = painterResource(R.mipmap.example_icon_user), contentDescription = null)
+        Column (modifier = GlanceModifier.fillMaxSize().background(PurpleApp)){
+            Text(text ="Hello", style = TextStyle(color = ColorProvider(Color.White)))
+        }
     }
 
 

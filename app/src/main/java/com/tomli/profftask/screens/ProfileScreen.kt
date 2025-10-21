@@ -48,6 +48,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.verticalScroll
@@ -58,11 +59,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
@@ -70,21 +73,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
-import com.canhub.cropper.CropImageView
 import com.tomli.profftask.R
 import com.tomli.profftask.databases.ProffViewModel
 import com.tomli.profftask.databases.UserData
 import com.tomli.profftask.ui.theme.BlueButtonColor
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
-import io.moyuru.cropify.Cropify
-import io.moyuru.cropify.CropifyOption
-import io.moyuru.cropify.CropifySize.PercentageSize.Companion.FullSize
-import io.moyuru.cropify.CropifyState
-import io.moyuru.cropify.rememberCropifyState
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -212,31 +206,15 @@ fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = v
                 )
             }
         }
-        
-        val width = remember { mutableStateOf(image.width) }
-        val height = remember { mutableStateOf(image.height)}
-        val showCrop = remember { mutableStateOf(false) }
-        /*Box(modifier = Modifier){
-            imageCrop.ImageCropView(
-                modifier = Modifier,
-                guideLineColor = Color.LightGray,
-                guideLineWidth = 2.dp,
-                edgeCircleSize = 5.dp,
-                showGuideLines = false,
-                cropType = CropType.PROFILE_CIRCLE,
-                edgeType = EdgeType.SQUARE,
-                )
-        }
-        var croppedBitmap = imageCrop.onCrop()*/
-        val state = rememberCropifyState()
-        Cropify(bitmap = image.asImageBitmap(), state = state, onImageCropped = {state.crop()})
-        Box(modifier = Modifier.height(100.dp)){
-            Text(text="Обрезать", modifier = Modifier.clickable { showCrop.value=true })
-        }
+
 
 
     }
 }
+
+
+
+
 
 
 

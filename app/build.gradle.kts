@@ -48,12 +48,13 @@ android {
 dependencies {
     implementation("androidx.glance:glance-appwidget:1.1.0")
     implementation("androidx.glance:glance-material3:1.1.0")
+    implementation("androidx.glance:glance:1.1.0")
+    //implementation("androidx.glance:glance-appwidget:1.0.0-alpha05")
+    //implementation("androidx.glance:glance:1.0.0-alpha05")
 
-    implementation("io.github.rroohit:ImageCropView:3.1.1")
-    implementation("com.github.moyuruaizawa:cropify:0.5.1")
-    implementation("com.vanniktech:android-image-cropper:4.6.0")
 
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation(libs.androidx.work.runtime.ktx)
 
     val room_version = "2.7.2"
 
