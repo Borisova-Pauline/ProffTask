@@ -171,6 +171,8 @@ fun ProfileScreen(navController: NavController, onThemeChange:()-> Unit, proffVi
                 Text(text="Change your image", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
             Button(onClick = {
+                sharedPrefs.edit().putInt("userId", -2).putBoolean("login", false).apply()
+                navController.navigate("onboarding")
             }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
                 modifier = Modifier
                     .fillMaxWidth()

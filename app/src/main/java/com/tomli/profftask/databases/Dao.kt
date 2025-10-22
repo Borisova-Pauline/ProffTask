@@ -19,7 +19,7 @@ interface Dao {
     @Query("select * from user_data where id=:id")
     suspend fun getUser(id: Int): UserData?
 
-    @Query("select * from user_data order by (guess_animal_count+right_choice_count) limit 3")
+    @Query("select * from user_data order by (guess_animal_count+right_choice_count) desc limit 3")
     fun getThreeBestCount(): Flow<List<UserData>>
 
     @Query("update user_data set right_choice_count=:count where id=:id")
@@ -52,6 +52,6 @@ interface Dao {
             "    UNION " +
             "    SELECT * FROM upper_rows) " +
             "SELECT * FROM all_rows " +
-            "ORDER BY total_sum DESC;")
-    suspend fun getForWidget(id: Int): List<UserData>
+            "ORDER BY total_sum DESC")
+    fun getForWidget(id: Int): Flow<List<UserData>>
 }

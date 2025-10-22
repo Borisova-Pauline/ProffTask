@@ -308,9 +308,9 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
             Text(text="Forgot Password", color = RedPinkColor)
             Button(onClick = {
                 if(email.value!=""&&password.value!=""){
-                    var userThis = UserData(0, "", "","","","", 0,0, null)
+                    var userThis = mutableStateOf(UserData(0, "", "","","","", 0,0, null))
                     var isHaveNot = mutableStateOf(false)
-                    proffViewModel.getUserOnLogin(email.value, password.value, {user, notHave ->  userThis=user; isHaveNot.value=notHave})
+                    proffViewModel.getUserOnLogin(email.value, password.value, {user, notHave ->  userThis.value=user; isHaveNot.value=notHave})
                     Log.v("error", "after user serching $isHaveNot")
                     if(!isHaveNot.value){
                         Toast.makeText(context, "Ошибка в почте или пароле", Toast.LENGTH_LONG).show()
@@ -318,7 +318,7 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
                         val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
                         val editor = sharedPrefs.edit()
                         editor.putBoolean("login", true)
-                        editor.putInt("userId", userThis.id!!)
+                        editor.putInt("userId", userThis.value.id!!)
                         editor.apply()
                         navController.navigate("main_page")
                     }

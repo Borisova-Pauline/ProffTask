@@ -49,8 +49,7 @@ dependencies {
     implementation("androidx.glance:glance-appwidget:1.1.0")
     implementation("androidx.glance:glance-material3:1.1.0")
     implementation("androidx.glance:glance:1.1.0")
-    //implementation("androidx.glance:glance-appwidget:1.0.0-alpha05")
-    //implementation("androidx.glance:glance:1.0.0-alpha05")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 
 
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
