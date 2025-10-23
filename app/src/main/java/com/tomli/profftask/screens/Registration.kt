@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -66,6 +67,7 @@ import com.tomli.profftask.ui.theme.FieldBackColorLight
 import com.tomli.profftask.ui.theme.ProffTaskTheme
 import com.tomli.profftask.ui.theme.PurpleApp
 import com.tomli.profftask.ui.theme.RedPinkColor
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -306,21 +308,26 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
                 ), visualTransformation = if(hidePassword.value) {PasswordVisualTransformation()} else {
                     VisualTransformation.None})
             Text(text="Forgot Password", color = RedPinkColor)
+            var userThis = remember{ mutableStateOf(UserData(0, "", "","","","", 0,0, null))}
+            var isHaveNot =remember{ mutableStateOf(false)}
             Button(onClick = {
                 if(email.value!=""&&password.value!=""){
-                    var userThis = mutableStateOf(UserData(0, "", "","","","", 0,0, null))
-                    var isHaveNot = mutableStateOf(false)
                     proffViewModel.getUserOnLogin(email.value, password.value, {user, notHave ->  userThis.value=user; isHaveNot.value=notHave})
                     Log.v("error", "after user serching $isHaveNot")
-                    if(!isHaveNot.value){
+                    Thread.sleep(200)
+                    if(isHaveNot.value){
                         Toast.makeText(context, "Ошибка в почте или пароле", Toast.LENGTH_LONG).show()
                     }else{
-                        val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-                        val editor = sharedPrefs.edit()
-                        editor.putBoolean("login", true)
-                        editor.putInt("userId", userThis.value.id!!)
-                        editor.apply()
-                        navController.navigate("main_page")
+                        if(userThis.value.id!!>0){
+                            val sharedPrefs = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                            val editor = sharedPrefs.edit()
+                            Thread.sleep(200)
+                            editor.putBoolean("login", true)
+                            editor.putInt("userId", userThis.value.id!!)
+                            editor.apply()
+                            Thread.sleep(200)
+                            navController.navigate("main_page")
+                        }
                     }
                 }else{
                     Toast.makeText(context, "Остались незаполненные поля", Toast.LENGTH_LONG).show()
@@ -330,6 +337,7 @@ fun LogIn(navController: NavController, proffViewModel: ProffViewModel = viewMod
             ) {
                 Text(text="Login", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
             }
+            //Text(text="${userThis.value}", color = Color(0xff65686f))
             Box(modifier = Modifier.fillMaxWidth()){
                 Row(modifier = Modifier.align(Alignment.Center)){
                     Text(text="Not you member? ", color = Color(0xff65686f))

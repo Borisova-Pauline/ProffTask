@@ -53,6 +53,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -111,8 +112,8 @@ fun ProfileScreen(navController: NavController, onThemeChange:()-> Unit, proffVi
             .fillMaxWidth()
             .clickable { navController.navigate("main_page") }) {
             Spacer(modifier = Modifier.height(7.dp))
-            val b: Bitmap? = byteArrayToBitmap(user.value.image_uri)
-            AsyncImage(model = /*user.value.image_uri*/ b ?: R.mipmap.example_icon_user, contentDescription = null,
+            val b: MutableState<Bitmap?> = remember { mutableStateOf(byteArrayToBitmap(user.value.image_uri)) }
+            AsyncImage(model = b.value ?: R.mipmap.example_icon_user, contentDescription = null,
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape))
@@ -196,8 +197,22 @@ fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = v
     val filePath = "$path/templeIcon.png"
     var image=BitmapFactory.decodeFile(filePath)
     File(filePath).deleteOnExit()
+    var size: Int
+    var xPosTemp: Int
+    var croppedImage: Bitmap
+    if(image.height<=image.width){
+        size = image.height
+        var xPos = image.width/2 - size/2
+        croppedImage = Bitmap.createBitmap(image, xPos, 0, size, size)
+    }else{
+        size = image.width
+        var yPos = image.height/2 - size/2
+        croppedImage = Bitmap.createBitmap(image, 0, yPos, size, size)
 
-    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(bottom = down)) {
+    }
+
+
+    Column(modifier = Modifier.fillMaxSize().background(Color.Black).padding(bottom = down)) {
         Box(modifier = Modifier.background(PurpleApp).fillMaxWidth().padding(15.dp).clickable { navController.navigate("profile_screen") }) {
             Column{
                 Spacer(modifier = Modifier.height(up))
@@ -208,9 +223,18 @@ fun ResizeImage(navController: NavController, proffViewModel: ProffViewModel = v
                 )
             }
         }
-
-
-
+        AsyncImage(model = croppedImage, contentDescription = null, modifier = Modifier.padding(10.dp).fillMaxWidth())
+        Spacer(modifier = Modifier.weight(1f))
+        Button(onClick = {
+            proffViewModel.updateIcon(currentUserId, bitmapToByteArray(croppedImage))
+            navController.navigate("profile_screen")
+        }, colors = ButtonDefaults.buttonColors(containerColor = BlueButtonColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp), shape = RoundedCornerShape(15.dp)
+        ) {
+            Text(text="Use that image", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(5.dp), color = Color.White)
+        }
     }
 }
 

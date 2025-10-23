@@ -51,6 +51,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -74,8 +75,6 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
     var currentUserId = sharedPrefs.getInt("userId", -2)
     var user = remember { mutableStateOf(UserData(0, "", "","","","", 0,0, null))}
     var userList = proffViewModel.threeBestUsers.collectAsState(initial = emptyList())
-    //var user = remember { mutableStateOf(UserData(0, "Polina@gmail", "Polina","Bor","1234","Russian", 1,2,null))}
-    //var userList= listOf(user.value, user.value, user.value)
     proffViewModel.getUser(currentUserId, {usr -> user.value=usr})
     val up = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val down = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
@@ -85,8 +84,8 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
         Column(modifier = Modifier.background(PurpleApp).padding(top = up, start=25.dp, end =25.dp).fillMaxWidth()
             .clickable { navController.navigate("profile_screen") }) {
             Spacer(modifier = Modifier.height(7.dp))
-            val b: Bitmap? = byteArrayToBitmap(user.value.image_uri)
-            AsyncImage(model = b ?: R.mipmap.example_icon_user, contentDescription = null,
+            val b: MutableState<Bitmap?> = remember { mutableStateOf(byteArrayToBitmap(user.value.image_uri))}
+            AsyncImage(model = b.value ?: R.mipmap.example_icon_user, contentDescription = null,
                 modifier = Modifier.size(70.dp).clip(CircleShape))
             Text(text = "Hello, ${user.value.name}", color=Color.White, fontSize = 22.sp,
                 modifier = Modifier.padding(vertical = 7.dp))
@@ -100,8 +99,8 @@ fun MainPage(navController: NavController, proffViewModel: ProffViewModel = view
                 items(userList.value){ item ->
                     Row(modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).background(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(20.dp))){
                         Box(modifier = Modifier.padding(10.dp)){
-                            val a: Bitmap? = byteArrayToBitmap(item.image_uri)
-                            AsyncImage(model = a ?: R.mipmap.example_icon_user, contentDescription = null,
+                            val a: MutableState<Bitmap?> = remember { mutableStateOf(byteArrayToBitmap(item.image_uri))}
+                            AsyncImage(model = a.value ?: R.mipmap.example_icon_user, contentDescription = null,
                                 modifier = Modifier.size(50.dp).clip(CircleShape))
                         }
                         Text(text = "${item.name}", fontSize=18.sp, modifier = Modifier.weight(1f).align(Alignment.CenterVertically).padding(5.dp),
